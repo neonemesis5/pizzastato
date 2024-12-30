@@ -1,5 +1,10 @@
 <?php
 
+namespace App\Models;
+
+use PDO;
+use PDOException;
+
 class DatabaseConnection {
     private $host = 'localhost';
     private $port = '5432';
@@ -19,7 +24,6 @@ class DatabaseConnection {
             die("Error de conexión: " . $e->getMessage()); // Muestra detalles del error
         }
     }
-    
 
     public function disconnect() {
         $this->connection = null;

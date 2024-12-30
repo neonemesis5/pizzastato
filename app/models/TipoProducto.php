@@ -1,8 +1,14 @@
 <?php
+
+namespace App\Models;
+
+use PDO;
+use PDOException;
+
 class TipoProducto {
     private $dbConnection;
 
-    public function __construct($dbConnection) {
+    public function __construct(PDO $dbConnection) {
         $this->dbConnection = $dbConnection;
     }
 
@@ -13,7 +19,7 @@ class TipoProducto {
             $stmt = $this->dbConnection->prepare($query);
             $stmt->bindParam(':nombre', $nombre, PDO::PARAM_STR);
             $stmt->execute();
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
             die("Error al crear tipo de producto: " . $e->getMessage());
         }
     }
@@ -24,7 +30,7 @@ class TipoProducto {
             $query = "SELECT id, nombre FROM tipo_producto ORDER BY id ASC";
             $stmt = $this->dbConnection->query($query);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
             die("Error al obtener los tipos de productos: " . $e->getMessage());
         }
     }
@@ -37,7 +43,7 @@ class TipoProducto {
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->bindParam(':nombre', $nombre, PDO::PARAM_STR);
             $stmt->execute();
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
             die("Error al actualizar tipo de producto: " . $e->getMessage());
         }
     }
@@ -49,7 +55,7 @@ class TipoProducto {
             $stmt = $this->dbConnection->prepare($query);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
             die("Error al eliminar tipo de producto: " . $e->getMessage());
         }
     }

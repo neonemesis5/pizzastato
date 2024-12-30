@@ -3,6 +3,7 @@ let cart = [];
 let totalUSD = 0;
 
 function showGroup(groupId) {
+    console.log(`showGroup ejecutado para: ${groupId}`);
     // Ocultar todos los grupos
     document.querySelectorAll('.group').forEach(group => {
         group.style.display = 'none';
@@ -15,7 +16,9 @@ function showGroup(groupId) {
     }
 }
 
+
 function addToCart(product, price) {
+    console.log(`Agregando ${product} con precio ${price} al carrito.`);
     // Buscar si el producto ya está en el carrito
     const existingProduct = cart.find(item => item.product === product);
     if (existingProduct) {
