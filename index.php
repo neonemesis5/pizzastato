@@ -1,3 +1,29 @@
+<?php
+
+spl_autoload_register(function ($class_name) {
+    require_once $class_name . '.php';
+});
+
+try {
+    $database = new DatabaseConnection();
+    $connection = $database->connect();
+
+    if ($connection) {
+        echo "La conexión a la base de datos es válida.<br>";
+    }
+
+    $tipoProductoManager = new TipoProducto($connection);
+    $tipoProductos = $tipoProductoManager->readAll();
+
+    // Depura los resultados de la base de datos
+    echo "<pre>";
+    print_r($tipoProductos);
+    echo "</pre>";
+} catch (Exception $e) {
+    echo "Error detectado: " . $e->getMessage();
+}
+
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -11,9 +37,11 @@
     <h1>Selecciona tus opciones</h1>
     <div class="container">
         <div class="products">
-            <button onclick="showGroup('pizzas')">Pizzas</button>
-            <button onclick="showGroup('refrescos')">Refrescos</button>
-            <button onclick="showGroup('adicionales')">Adicionales</button>
+            <?php foreach ($tipoProductos as $producto): ?>
+                <button onclick="showGroup('<?php echo strtolower($producto['nombre']); ?>')">
+                    <?php echo htmlspecialchars($producto['nombre']); ?>
+                </button>
+            <?php endforeach; ?>
         </div>
 
         <div id="pizzas" class="group">
