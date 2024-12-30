@@ -5,6 +5,7 @@ require_once '../config/autoload.php';
 use App\Models\DatabaseConnection;
 use App\Controllers\TipoProductoController;
 use App\Models\Producto;
+use App\Models\Tasa;
 
 try {
     $db = new DatabaseConnection();
@@ -20,6 +21,10 @@ try {
         $productoModel = new Producto($connection);
         $productosPorTipo[$tipoProducto['nombre']] = $productoModel->getByTipoProducto($tipoProducto['id']);
     }
+    // Obtiene las tasas de cambio más recientes
+    $tasaModel = new Tasa($connection);
+    $exchangeRates = $tasaModel->getLatestRates();
+  
 } catch (Exception $e) {
     echo "Error detectado: " . $e->getMessage();
     exit;
@@ -34,30 +39,9 @@ try {
     <title>Sistema de Pedidos</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <h1>Selecciona tus opciones</h1>
-    <div>
-    <table id="orderTable">
-        <thead>
-            <tr>
-                <th>Producto</th>
-                <th>Cantidad</th>
-                <th>Precio</th>
-                <th>Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Las filas se generarán dinámicamente -->
-        </tbody>
-    </table>
-</div>
-
-<!-- Totales -->
-<div>
-    <p>Total USD: <span id="totalUSD">0.00</span></p>
-    <p>Total COP: <span id="totalCOP">0.00</span></p>
-    <p>Total VES: <span id="totalVES">0.00</span></p>
-</div>
 
     <div class="container">
         <div class="products">
@@ -77,92 +61,115 @@ try {
             </div>
         <?php endforeach; ?>
     </div>
+    <div>
+        <table id="orderTable">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Las filas se generarán dinámicamente -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Totales -->
+    <div>
+        <p>Total COP: <span id="totalCOP">0.00</span></p>
+        <p>Total USD: <span id="totalUSD">0.00</span></p>
+        <p>Total VES: <span id="totalVES">0.00</span></p>
+    </div>
+
     <script>
-      // Carrito para almacenar los productos seleccionados
-let cart = [];
-let totalUSD = 0;
+        // Tasas de cambio cargadas desde el backend
+        const exchangeRates = <?php echo json_encode($exchangeRates); ?>;
 
-function showGroup(groupId) {
-    console.log(`showGroup ejecutado para: ${groupId}`);
-    // Ocultar todos los grupos
-    document.querySelectorAll('.group').forEach(group => {
-        group.style.display = 'none';
-    });
+        // Carrito para almacenar los productos seleccionados
+        let cart = [];
+        let selectedCurrency = 'COP'; // Moneda por defecto
 
-    // Mostrar solo el grupo seleccionado
-    const group = document.getElementById(groupId);
-    if (group) {
-        group.style.display = 'flex';
-    }
-}
+        function showGroup(groupId) {
+            console.log(`showGroup ejecutado para: ${groupId}`);
+            // Ocultar todos los grupos
+            document.querySelectorAll('.group').forEach(group => {
+                group.style.display = 'none';
+            });
 
+            // Mostrar solo el grupo seleccionado
+            const group = document.getElementById(groupId);
+            if (group) {
+                group.style.display = 'flex';
+            }
+        }
 
-function addToCart(product, price) {
-    console.log(`Agregando ${product} con precio ${price} al carrito.`);
-    // Buscar si el producto ya está en el carrito
-    const existingProduct = cart.find(item => item.product === product);
-    if (existingProduct) {
-        existingProduct.quantity++;
-        existingProduct.total += price;
-        console.log(`Agregando ${product} con precio ${price} al carrito.`);
-    } else {
-        // Si no está, agregarlo al carrito
-        cart.push({
-            product: product,
-            price: price,
-            quantity: 1,
-            total: price
-        });
-    }
+        function convertPrice(priceInCOP, targetCurrency) {
+            if (!exchangeRates) {
+                console.error('No se cargaron las tasas de cambio.');
+                return priceInCOP;
+            }
+            // Moneda base: COP
+            if (targetCurrency === 'USD') {
+                return priceInCOP / exchangeRates['20_10']; // 20 (COP) a 10 (USD)
+            } else if (targetCurrency === 'BSS') {
+                return (priceInCOP / exchangeRates['20_10']) * exchangeRates['10_30'];//(priceInCOP * exchangeRates['10_30']); // COP a USD, luego USD a BSS
+            } else {
+                return priceInCOP; // Retorna en COP si no hay conversión
+            }
+        }
 
-    // Actualizar el carrito
-    updateCart();
-}
-function updateCart() {
-    const tableBody = document.querySelector('#orderTable tbody');
-    if (!tableBody) {
-        console.error('El elemento #orderTable no existe en el DOM.');
-        return;
-    }
+        function addToCart(product, price) {
+            const convertedPrice = convertPrice(price, selectedCurrency);
+            console.log(`Agregando ${product} con precio ${convertedPrice.toFixed(2)} ${selectedCurrency} al carrito.`);
 
-    tableBody.innerHTML = ''; // Limpiar tabla
+            const existingProduct = cart.find(item => item.product === product);
+            if (existingProduct) {
+                existingProduct.quantity++;
+                existingProduct.total += price;
+            } else {
+                cart.push({
+                    product: product,
+                    price: price,
+                    quantity: 1,
+                    total: price
+                });
+            }
 
-    totalUSD = 0;
+            updateCart();
+        }
 
-    // Agregar filas de productos al carrito
-    cart.forEach(item => {
-        totalUSD += item.total;
-        tableBody.innerHTML += `
-            <tr>
-                <td>${item.product}</td>
-                <td>${item.quantity}</td>
-                <td>${item.price}</td>
-                <td>${item.total}</td>
-            </tr>
-        `;
-    });
+        function updateCart() {
+            const tableBody = document.querySelector('#orderTable tbody');
+            if (!tableBody) {
+                console.error('El elemento #orderTable no existe en el DOM.');
+                return;
+            }
 
-    // Actualizar los totales
-    document.getElementById('totalUSD').textContent = totalUSD.toFixed(2);
-    document.getElementById('totalCOP').textContent = (totalUSD * 4000).toFixed(2); // Tasa de ejemplo
-    document.getElementById('totalVES').textContent = (totalUSD * 35).toFixed(2);   // Tasa de ejemplo
-}
+            tableBody.innerHTML = ''; // Limpiar tabla
+            let totalCOP = 0;
 
-function showModal() {
-    const modalDetails = document.getElementById('modalDetails');
-    modalDetails.innerHTML = cart.map(item => `
-        <p>${item.product} - ${item.quantity} x ${item.price} = ${item.total}</p>
-    `).join('');
+            cart.forEach(item => {
+                const convertedPrice = convertPrice(item.price, selectedCurrency);
+                const convertedTotal = convertPrice(item.total, selectedCurrency);
+                tableBody.innerHTML += `
+                    <tr>
+                        <td>${item.product}</td>
+                        <td>${item.quantity}</td>
+                        <td>${convertedPrice.toFixed(2)} ${selectedCurrency}</td>
+                        <td>${convertedTotal.toFixed(2)} ${selectedCurrency}</td>
+                    </tr>
+                `;
+                totalCOP += item.total;
+            });
 
-    // Mostrar el modal
-    document.getElementById('orderModal').style.display = 'block';
-}
-
-function closeModal() {
-    // Ocultar el modal
-    document.getElementById('orderModal').style.display = 'none';
-}
-
+            document.getElementById('totalCOP').textContent = totalCOP.toFixed(2);
+            document.getElementById('totalUSD').textContent = (totalCOP / exchangeRates['20_10']).toFixed(2);
+            document.getElementById('totalVES').textContent = (totalCOP * exchangeRates['10_30']).toFixed(2);
+        }
     </script>
 </body>
+
 </html>
