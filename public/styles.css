@@ -3,14 +3,18 @@
     flex-wrap: wrap;
     gap: 20px;
 }
-.products, .summary {
+
+.products,
+.summary {
     width: 48%;
 }
+
 .group {
     display: none;
     flex-wrap: wrap;
     gap: 10px;
 }
+
 .icon {
     width: 100px;
     height: 100px;
@@ -23,6 +27,7 @@
     cursor: pointer;
     text-align: center;
 }
+
 .modal {
     position: fixed;
     top: 0;
@@ -34,10 +39,43 @@
     justify-content: center;
     align-items: center;
 }
+
 .modal-content {
     background: white;
     padding: 20px;
     border-radius: 10px;
     width: 50%;
     text-align: center;
+}
+
+/* Estilos específicos para cada clase de encabezado */
+#orderTable  .check {
+    width: 50px;
+    /* Ajusta el ancho de la columna de eliminación */
+    text-align: center;
+    /* Centra el contenido */
+}
+
+#orderTable .Product {
+    width: 200px;
+    /* Ajusta el ancho de la columna del producto */
+}
+
+#orderTable .qty {
+    width: 150px;
+    /* Ajusta el ancho de la columna de cantidad */
+    text-align: center;
+}
+
+#orderTable .amt {
+    width: 100px;
+    /* Ajusta el ancho de la columna de precio */
+    text-align: right;
+    /* Alinea el precio a la derecha */
+}
+
+#orderTable .total {
+    width: 100px;
+    /* Ajusta el ancho de la columna de total */
+    text-align: right;
 }
