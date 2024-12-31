@@ -15,10 +15,10 @@ class DatabaseConnection {
 
     public function connect() {
         try {
-            echo "Intentando conectar a la base de datos...\n"; // Mensaje de depuración
+            // echo "Intentando conectar a la base de datos...\n"; // Mensaje de depuración
             $this->connection = new PDO("pgsql:host=$this->host;port=$this->port;dbname=$this->dbname", $this->user, $this->password);
             $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            echo "Conexión exitosa.\n"; // Mensaje de depuración
+            // echo "Conexión exitosa.\n"; // Mensaje de depuración
             return $this->connection;
         } catch (PDOException $e) {
             die("Error de conexión: " . $e->getMessage()); // Muestra detalles del error

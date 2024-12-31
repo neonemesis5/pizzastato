@@ -15,6 +15,17 @@ class DetallePed extends BaseModel {
     public function createDetalle($pedidoId, $productoId, $qty, $preciov, $status = 'A') {
         $query = "INSERT INTO detalleped (pedido_id, producto_id, qty, preciov, status) 
                   VALUES (:pedido_id, :producto_id, :qty, :preciov, :status)";
+        
+        // Log para la consulta y los valores
+        file_put_contents('../logs/model.log', "Query: $query" . PHP_EOL, FILE_APPEND);
+        file_put_contents('../logs/model.log', "Values: " . print_r([
+            ':pedido_id' => $pedidoId,
+            ':producto_id' => $productoId,
+            ':qty' => $qty,
+            ':preciov' => $preciov,
+            ':status' => $status
+        ], true), FILE_APPEND);
+    
         $this->prepareAndExecute($query, [
             ':pedido_id' => $pedidoId,
             ':producto_id' => $productoId,
