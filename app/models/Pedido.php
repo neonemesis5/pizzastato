@@ -48,4 +48,14 @@ class Pedido extends BaseModel {
         $query = "SELECT * FROM pedido";
         return $this->prepareAndExecute($query)->fetchAll(PDO::FETCH_ASSOC);
     }
+      /**
+     * Obtiene el último ID de pedido registrado.
+     * 
+     * @return int|null El último ID de pedido o null si no hay pedidos.
+     */
+    public function getLastPedidoId() {
+        $query = "SELECT p.id AS lastid FROM pedido p ORDER BY id DESC LIMIT 1";
+        $result = $this->prepareAndExecute($query)->fetch(PDO::FETCH_ASSOC);
+        return !empty($result) ? (int) $result['lastid'] : null;
+    }
 }
