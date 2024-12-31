@@ -2,7 +2,7 @@ Query: INSERT INTO detalleped (pedido_id, producto_id, qty, preciov, status)
                   VALUES (:pedido_id, :producto_id, :qty, :preciov, :status)
 Values: Array
 (
-    [:pedido_id] => 2
+    [:pedido_id] => 4
     [:producto_id] => 1001
     [:qty] => 1
     [:preciov] => 6000
@@ -12,29 +12,39 @@ Query: INSERT INTO detalleped (pedido_id, producto_id, qty, preciov, status)
                   VALUES (:pedido_id, :producto_id, :qty, :preciov, :status)
 Values: Array
 (
-    [:pedido_id] => 2
+    [:pedido_id] => 4
     [:producto_id] => 1002
     [:qty] => 1
     [:preciov] => 6000
-    [:status] => I
+    [:status] => A
 )
 Query: INSERT INTO detalleped (pedido_id, producto_id, qty, preciov, status) 
                   VALUES (:pedido_id, :producto_id, :qty, :preciov, :status)
 Values: Array
 (
-    [:pedido_id] => 2
+    [:pedido_id] => 4
     [:producto_id] => 1003
     [:qty] => 1
     [:preciov] => 6000
-    [:status] => I
+    [:status] => A
 )
 Query: INSERT INTO detalleped (pedido_id, producto_id, qty, preciov, status) 
                   VALUES (:pedido_id, :producto_id, :qty, :preciov, :status)
 Values: Array
 (
-    [:pedido_id] => 2
-    [:producto_id] => 1101
-    [:qty] => 234
+    [:pedido_id] => 4
+    [:producto_id] => 1004
+    [:qty] => 1
+    [:preciov] => 6000
+    [:status] => A
+)
+Query: INSERT INTO detalleped (pedido_id, producto_id, qty, preciov, status) 
+                  VALUES (:pedido_id, :producto_id, :qty, :preciov, :status)
+Values: Array
+(
+    [:pedido_id] => 4
+    [:producto_id] => 1102
+    [:qty] => 500
     [:preciov] => 1000
     [:status] => A
 )
@@ -42,9 +52,39 @@ Query: INSERT INTO detalleped (pedido_id, producto_id, qty, preciov, status)
                   VALUES (:pedido_id, :producto_id, :qty, :preciov, :status)
 Values: Array
 (
-    [:pedido_id] => 3
-    [:producto_id] => 1100
-    [:qty] => 400
-    [:preciov] => 1000
+    [:pedido_id] => 4
+    [:producto_id] => 1200
+    [:qty] => 1
+    [:preciov] => 6000
+    [:status] => I
+)
+Query: INSERT INTO detalleped (pedido_id, producto_id, qty, preciov, status) 
+                  VALUES (:pedido_id, :producto_id, :qty, :preciov, :status)
+Values: Array
+(
+    [:pedido_id] => 4
+    [:producto_id] => 1201
+    [:qty] => 1
+    [:preciov] => 12000
+    [:status] => A
+)
+Query: INSERT INTO detalleped (pedido_id, producto_id, qty, preciov, status) 
+                  VALUES (:pedido_id, :producto_id, :qty, :preciov, :status)
+Values: Array
+(
+    [:pedido_id] => 4
+    [:producto_id] => 1300
+    [:qty] => 1
+    [:preciov] => 0
+    [:status] => A
+)
+Query: INSERT INTO detalleped (pedido_id, producto_id, qty, preciov, status) 
+                  VALUES (:pedido_id, :producto_id, :qty, :preciov, :status)
+Values: Array
+(
+    [:pedido_id] => 4
+    [:producto_id] => 1301
+    [:qty] => 1
+    [:preciov] => 0
     [:status] => A
 )

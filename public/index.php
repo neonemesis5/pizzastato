@@ -258,46 +258,8 @@ try {
             }
         }
 
-        // function saveOrder() {
-        //     const order = {
-        //         date: new Date().toISOString(),
-        //         nombre: 'John', // Cambiar según los datos reales
-        //         apellido: 'Doe',
-        //         total: cart.reduce((acc, item) => acc + item.total, 0),
-        //         status: 'D',
-        //         items: cart.map(item => ({
-        //             productId: item.productId,
-        //             quantity: item.quantity,
-        //             price: item.price,
-        //             status: item.markedForDeletion ? 'I' : 'A'
-        //         }))
-        //     };
-
-        //     console.log('Datos a enviar:', order); // Verificar en consola
-
-        //     fetch('saveOrder.php', {
-        //             method: 'POST',
-        //             headers: {
-        //                 'Content-Type': 'application/json'
-        //             },
-        //             body: JSON.stringify(order)
-        //         })
-        //         .then(response => response.json())
-        //         .then(data => {
-        //             if (data.success) {
-        //                 alert('Pedido guardado exitosamente');
-        //                 cart = [];
-        //                 updateCart();
-        //             } else {
-        //                 alert('Error al guardar el pedido: ' + data.error);
-        //             }
-        //         })
-        //         .catch(error => {
-        //             console.error('Error:', error);
-        //         });
-        // }
         function saveOrder() {
-            const order = { // Cambia 'ordr' a 'order'
+            const order = { 
                 date: new Date().toISOString(),
                 nombre: 'John', // Cambiar según los datos reales
                 apellido: 'Doe',
